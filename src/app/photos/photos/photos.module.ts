@@ -7,6 +7,9 @@ import { HeaderComponent } from '../navigation/header/header.component';
 import { SidebarComponent } from '../navigation/sidebar/sidebar.component';
 import { MaterialModule } from 'src/app/material/material.module';
 
+import { DateformetPipe } from '../photosService/dateformet.pipe';
+import { HomeComponent } from './home/home.component';
+import { ArchiveComponent } from './archive/archive.component';
 
 
 @NgModule({
@@ -14,6 +17,9 @@ import { MaterialModule } from 'src/app/material/material.module';
     PhotosComponent,
     HeaderComponent,
     SidebarComponent,
+    DateformetPipe,
+    HomeComponent,
+    ArchiveComponent
   ],
   imports: [
     CommonModule,
