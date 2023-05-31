@@ -27,8 +27,10 @@ export class SidebarComponent implements OnInit {
   }
 
   public doSomething(date: any) {
-    console.log('Picked date: ', date);
+    // console.log('Picked date: ', date);
     this.isDarkEnable = date;
+    console.log(this.isDarkEnable);
+    
   }
   public togle(side: any) {
     side.toggle()
@@ -86,13 +88,8 @@ export class SidebarComponent implements OnInit {
     console.log(headers.get('Authorization'));
 
     this.photoservice.uploadPhotos(formData).subscribe((res: any) => {
-      console.log(res.result.image);
-      this.imageArray = res.result.image
-      console.log(this.imageArray);
+      location.reload()
 
-      this.imageObj = Object.keys(this.imageArray)
-      this.imageObj.sort(this.compareDates);
-      this.imageObj.reverse()
 
     }, (err) => {
       console.log(err);

@@ -1,9 +1,9 @@
 <div class="{{ isDarkEnable ? 'dark' : '' }}">
   <mat-sidenav-container fullscreen>
-    <mat-sidenav #sidenav class="mat-elevation-z4 w-64 dark:bg-bgg" mode="side" opened="true">
+    <mat-sidenav #sidenav class="mat-elevation-z4 w-64 duration-500 dark:bg-darkblue bg-cream" mode="side" opened="true">
       <mat-nav-list>
         <nav id="sidenav-2"
-          class="fixed ml-0 left-0 dark:bg-bgg top-0 z-[1035] h-screen w-60 -translate-x-full overflow-hidden bg-white shadow-[0_4px_12px_0_rgba(0,0,0,0.07),_0_2px_4px_rgba(0,0,0,0.05)] data-[te-sidenav-hidden='false']:translate-x-0 dark:bg-zinc-800"
+          class="fixed ml-0 left-0 dark:bg-darkblue duration-500  top-0 z-[1035] h-screen w-60 -translate-x-full overflow-hidden bg-white shadow-[0_4px_12px_0_rgba(0,0,0,0.07),_0_2px_4px_rgba(0,0,0,0.05)] data-[te-sidenav-hidden='false']:translate-x-0 "
           data-te-sidenav-init data-te-sidenav-hidden="false" data-te-sidenav-mode="side"
           data-te-sidenav-content="#content">
           <div class="float-right lg:hidden">
@@ -21,8 +21,13 @@
 
           <!-- Upload Button -->
           <div class="text-center hidden md:block mb-10">
-            <div class=" inline-block rounded-3xl shadow-lg shadow-dark_Background bg-btn p-4 ">
-              <button type="" class="text-xl" (click)="fileinput.click()"><i class="fa-solid fa-upload"></i>
+            <div *ngIf="isDarkEnable" style="background: #a7baff" class=" inline-block rounded-3xl shadow-lg p-4 ">
+              <button type="" class="text-xl opacity-95 " (click)="fileinput.click()"><i class="fa-solid fa-upload"></i>
+                Upload</button>
+              <input type="file" name="" #fileinput id="" (change)="upload($event)" multiple class="hidden">
+            </div>
+            <div *ngIf="!isDarkEnable" style="background-color: #a7baff;"  class=" inline-block rounded-3xl shadow-lg p-4 ">
+              <button type="" class="text-xl opacity-95 " (click)="fileinput.click()"><i class="fa-solid fa-upload"></i>
                 Upload</button>
               <input type="file" name="" #fileinput id="" (change)="upload($event)" multiple class="hidden">
             </div>
@@ -30,14 +35,14 @@
 
           <!-- Nav Links -->
           <ul class="relative m-0 list-none px-[0.2rem]" data-te-sidenav-menu-ref>
-            <li class="relative mb-3 rounded-r-full dark:bg-btn bg-btn" *ngFor="let i of navigation">
+            <li class="relative mb-3 rounded-r-full bg-lightblue" *ngFor="let i of navigation">
               <a [routerLink]="[i.path]"
                 class="flex h-12 cursor-pointer items-center truncate rounded-[5px] px-6 py-4 text-[0.875rem] text-gray-600 outline-none transition duration-300 ease-linear hover:bg-slate-50 hover:text-inherit hover:outline-none focus:bg-slate-50 focus:text-inherit focus:outline-none active:bg-slate-50 active:text-inherit active:outline-none data-[te-sidenav-state-active]:text-inherit data-[te-sidenav-state-focus]:outline-none motion-reduce:transition-none dark:text-gray-300 dark:hover:bg-white/10 dark:focus:bg-white/10 dark:active:bg-white/10"
                 data-te-sidenav-link-ref>
                 <span class="mr-4 ml-8 [&>svg]:h-4 [&>svg]:w-4 [&>svg]:text-gray-400 dark:[&>svg]:text-gray-300">
-                  <i class="dark:text-text-dark text-text-dark h-4 w-4" class="{{ i.icon }}"></i>
+                  <i class="dark:text-text-dark text-black h-4 w-4" class="{{ i.icon }}"></i>
                 </span>
-                <span class="dark:text-text-dark text-text-dark">{{
+                <span class="dark:text-text-dark text-black">{{
                   i.title
                   }}</span>
               </a>
@@ -46,7 +51,7 @@
         </nav>
       </mat-nav-list>
     </mat-sidenav>
-    <div class="">
+    <div class=" dark:bg-fulldark duration-500">
       <app-header (toggle)="togle(sidenav)" (data)="doSomething($event)">
       </app-header>
       <router-outlet></router-outlet>

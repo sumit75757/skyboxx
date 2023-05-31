@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PhotosServiceService } from '../../photosService/photos-service.service';
 import { ActivatedRoute } from '@angular/router';
 import { HttpHeaders } from '@angular/common/http';
+import { SidebarComponent } from '../../navigation/sidebar/sidebar.component';
 
 @Component({
   selector: 'app-home',
@@ -9,13 +10,15 @@ import { HttpHeaders } from '@angular/common/http';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+  visible = false;
 
-  constructor(private photoservice: PhotosServiceService, private activeroute: ActivatedRoute) {
+
+  constructor(private photoservice: PhotosServiceService, private activeroute: ActivatedRoute,public sidbar:SidebarComponent) {
     activeroute.queryParams.subscribe(params => {
       this.userId = params['id']
       this.token = params['token']
-      localStorage.setItem('userid',this.userId)
-      localStorage.setItem('token',this.token)
+      localStorage.setItem('userid', this.userId)
+      localStorage.setItem('token', this.token)
 
 
     })
@@ -23,173 +26,177 @@ export class HomeComponent implements OnInit {
   userId: any
   token: any
 
+  selectAll = false
+  oneSelected = false
+
   imageArray: any
-  imageObj: any =[]
-  imagePaths:any =[]
+  imageObj: any = []
+ 
+  // imagePaths: any = []
+  image: { [key: string]: any[] } = {};
 
   ngOnInit(): void {
+    
+    
     this.imageGet()
   }
-  
+
   imageGet() {
-    
+
     this.imageArray = []
-    this.imageObj =[]
-    
+    this.imageObj = []
+
     let headers = new HttpHeaders();
     headers = headers.set('Authorization', `Bearer ${this.token}`);
     console.log(headers.get('Authorization'));
-    
+
     this.photoservice.getPhotos(this.userId, headers).subscribe((res: any) => {
-      
-      
+      console.log(res);
+
+
       this.imageArray = res.result[0].image
       console.log(this.imageArray);
-      
-      for (const mainkey in this.imageArray) {
-        let flag = true
-        this.imageArray[mainkey].forEach((element:any) => {
-          if (element.archive == false) {
-            this.imageObj.forEach((savedkey:any) => {
-              if (mainkey==savedkey) {
-                flag = false
-              }
-            });
-            if (flag == true) {
-              
-              this.imageObj.push(mainkey)
-            }
-         }
-          
-        });
-      }
+      this.imageObj = Object.keys(this.imageArray)
+      // for (const mainkey in this.imageArray) {
+      //   let flag = true
+      //   this.imageArray[mainkey].forEach((element:any) => {
+      //     if (element.archive == false) {
+      //       this.imageObj.forEach((savedkey:any) => {
+      //         if (mainkey==savedkey) {
+      //           flag = false
+      //         }
+      //       });
+      //       if (flag == true) {
+
+      //         this.imageObj.push(mainkey)
+      //       }
+      //    }
+
+      //   });
+      // }
       console.log(this.imageObj);
-      
+      console.log(this.imageArray);
+
       this.imageObj.sort(this.compareDates);
       this.imageObj.reverse()
 
 
     },
-    (err) => {
-      console.log(err);
-      
-    })
-    
+      (err) => {
+        console.log(err);
+
+      })
+
   }
-  
+
   compareDates(date1: any, date2: any) {
-    var parts1 = date1.split('/');  
-    var parts2 = date2.split('/');  
-    
-    var year1 = parseInt(parts1[1]);  
-    var year2 = parseInt(parts2[1]);  
-    
-    var month1 = parseInt(parts1[0]);  
-    var month2 = parseInt(parts2[0]);  
-    
-    
+    var parts1 = date1.split('/');
+    var parts2 = date2.split('/');
+
+    var year1 = parseInt(parts1[1]);
+    var year2 = parseInt(parts2[1]);
+
+    var month1 = parseInt(parts1[0]);
+    var month2 = parseInt(parts2[0]);
+
+
     if (year1 < year2) {
       return -1;
     } else if (year1 > year2) {
       return 1;
     } else {
-      
+
       if (month1 < month2) {
         return -1;
       } else if (month1 > month2) {
         return 1;
       } else {
-        return 0;  
+        return 0;
       }
     }
   }
 
-   
-  
-  
-  
-  upload(event: any) {
-    const files: any = event.target.files;
-    const formData = new FormData();
-    formData.append('userid', this.userId);
-    for (let i = 0; i < files.length; i++) {
-      const file: File = files[i];
-      const { lastModified, name }: any = files[i];
-      formData.append('image', file);
-      formData.append('modifiedDates[]', files[i].lastModified);
-      console.log(file);
+
+
+
+
+
+  archive() {
+    let data = {
+      "image": this.image
     }
-    
     let headers = new HttpHeaders();
     headers = headers.set('Authorization', `Bearer ${this.token}`);
-    console.log(headers.get('Authorization'));
-    
-    this.photoservice.uploadPhotos(formData).subscribe((res: any) => {
-      console.log(res.result.image);
-      this.imageArray = res.result.image
-      console.log(this.imageArray);
-      
-      this.imageObj = Object.keys(this.imageArray)
-      this.imageObj.sort(this.compareDates);
-      this.imageObj.reverse()
-      
-    }, (err) => {
-      console.log(err);
-      
+    this.photoservice.archive(this.userId, data, headers).subscribe(res => {
+      console.log(res);
+      this.imageGet()
+
     })
-    
+
+
   }
-  
-  
-  archive(){
-    if (this.selectAll == true) {
-      this.imageObj.forEach((key:any) => {
-        this.imageArray[key].forEach((image:any)=>{
-               this.imagePaths.push(image.img)
-        })
-      });
+
+  bin(){
+    let data = {
+      "image": this.image
     }
-    if (this.imagePaths.length >0) {
-      let data={
-        userid:this.userId,
-        img:this.imagePaths,
-        archive:true
-      }
-      let headers = new HttpHeaders();
-      headers = headers.set('Authorization', `Bearer ${this.token}`);
-      this.photoservice.archive(data,headers).subscribe(res=>{
-        console.log(res);
-        this.imageGet()
-      
+    let headers = new HttpHeaders();
+    headers = headers.set('Authorization', `Bearer ${this.token}`);
+    this.photoservice.bin(this.userId, data, headers).subscribe(res => {
+      console.log(res);
+      this.imageGet()
+
     })
-     
-     
-   }
-   
+  }
+
+  fetcthSelected(data: any, key: any, event: any) {
+    let allKeys = Object.keys(this.image)
+    if (event.target.checked) {
+      this.oneSelected = true
+      if (allKeys.length == 0) {
+        this.image[key] = []
+        this.image[key].push(data)
+      } else {
+        allKeys.forEach(k => {
+          if (k == key) {
+            this.image[key].push(data)
+          } else {
+            this.image[key] = []
+            this.image[key].push(data)
+          }
+        })
+      }
+    }
+    else{
+      this.image[key].forEach((element: any,index: any)=>{
+        console.log(element._id);
+        if (element._id==data._id) {
+          this.image[key].splice(index,1)
+          if (this.image[key].length==0) {
+            delete this.image[key]
+          }
+        }
+      })
+      if (Object.keys(this.image).length == 0) {
+        this.oneSelected = false
+      }
+    }
+    console.log(this.image);
+
+
     
   }
 
+  select() {
+    this.selectAll = !this.selectAll
+if (this.selectAll==true) {
+  this.image=this.imageArray    
+} else {
+  this.image={}
+}    
 
-  fetcthSelected(path:any,event:any){
-   if (event.target.checked) {
-    this.imagePaths.push(path)
-    console.log(this.imagePaths);
-   }else{
-     this.imagePaths.forEach((element: any,index: any) => {
-       
-       if (element == path) {
-        console.log(element);
-        this.imagePaths.splice(index,1)
-        
-        console.log(this.imagePaths);
-      }
-      
-    });
-   }
-  }
 
-selectAll=false
-  select(){
-this.selectAll=!this.selectAll
+    
+    this.oneSelected = this.selectAll
   }
 }

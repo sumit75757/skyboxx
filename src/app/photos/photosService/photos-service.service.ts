@@ -15,12 +15,14 @@ export class PhotosServiceService {
   }
 
   getPhotos(id: any,head:any) {
-    return this.http.get(this.baseURL+'/img?userid='+id,{ headers:head})
-    // return this.http.get('http://localhost:4000/api/img?userid='+id,{ headers:head})
+    return this.http.get(this.baseURL+'/img?userid='+id, {headers:head})
   }
 
-  archive(data:any,head:any){
-    return this.http.post(this.baseURL+'/archive',data,{headers:head})
+  archive(id:any,data:any,head:any){
+    return this.http.post(this.baseURL+'/archive?userid='+id,data, {headers:head})
+  }
+  bin(id:any,data:any,head:any){
+    return this.http.post(this.baseURL+'/bin?userid='+id,data, {headers:head})
   }
 
 }

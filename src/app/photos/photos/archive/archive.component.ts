@@ -113,11 +113,11 @@ this.userId =localStorage.getItem("userid")
       }
       let headers = new HttpHeaders();
       headers = headers.set('Authorization', `Bearer ${this.token}`);
-      this.photoservice.archive(data,headers).subscribe(res=>{
-        console.log(res);
-        this.imageGet()
+    //   this.photoservice.archive(data,headers).subscribe(res=>{
+    //     console.log(res);
+    //     this.imageGet()
       
-    })
+    // })
      
      
    }
@@ -128,6 +128,8 @@ this.userId =localStorage.getItem("userid")
 
   fetcthSelected(path:any,event:any){
    if (event.target.checked) {
+    this.oneSelected=true
+// this.selectAll = true
     this.imagePaths.push(path)
     console.log(this.imagePaths);
    }else{
@@ -136,6 +138,10 @@ this.userId =localStorage.getItem("userid")
        if (element == path) {
         console.log(element);
         this.imagePaths.splice(index,1)
+        if (this.imagePaths.length == 0) {
+          this.oneSelected = false
+          this.selectAll = false
+        }
         
         console.log(this.imagePaths);
       }
@@ -144,9 +150,15 @@ this.userId =localStorage.getItem("userid")
    }
   }
   selectAll=false
-  select(){
-this.selectAll=!this.selectAll
+  oneSelected = false
+    select(){
+      this.imageObj.forEach((key:any) => {
+        this.imageArray[key].forEach((image:any)=>{
+               this.imagePaths.push(image.img)
+        })
+      });
+  this.selectAll=!this.selectAll
+  this.oneSelected = this.selectAll
+    }
   }
 
-
-}

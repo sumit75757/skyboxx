@@ -13,7 +13,7 @@ module.exports = {
       'light_Surface':'#fff',
       'light_Error':'#b00020',
       'light_On_Primary':'#fff',
-      'light_On_Secondary':'#000',
+      'light_On_Secondary':'#ebebeb',
       'light_On_Background':'#000',
       'light_On_Surface':'#000',
       'light_On_Error':'#fff',
@@ -40,6 +40,23 @@ module.exports = {
       'dark-route-link-active': '#ff500b',
       'text-dark': '#fff',
       'dark-border-color': '#1cd61c',
+
+
+      // meet
+
+      'cream':'#edf6ff',
+      'black':'#201e20',
+
+      'darkblue':'#0e2b48',
+      'lightblue':'#1b95e3',
+      // 'yellow':'#ee7311',
+      // 'fulldark':'#0e2946',
+      'fulldark':'#1D365E',
+      'darkwhite':'#e5e7eb'
+      
+
+      // ebb531
+      // ef6d0f
 
 
     },
