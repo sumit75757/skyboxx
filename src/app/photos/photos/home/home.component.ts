@@ -137,22 +137,27 @@ export class HomeComponent implements OnInit {
   }
 
   fetcthSelected(data: any, key: any, event: any) {
+    console.log(data);
+    
     let allKeys = Object.keys(this.image)
     if (event.target.checked) {
+      let found=false
       this.oneSelected = true
-      if (allKeys.length == 0) {
-        this.image[key] = []
-        this.image[key].push(data)
-      } else {
-        allKeys.forEach(k => {
-          if (k == key) {
-            this.image[key].push(data)
-          } else {
-            this.image[key] =  []
-            this.image[key].push(data)
-          }
-        })
-      }
+
+      allKeys.forEach(el=>{
+        if (el==key) {
+          found = true
+        }
+      })
+
+     if (found==false) {
+      this.image[key]=[]
+      this.image[key].push(data)
+    }else{
+       this.image[key].push(data)
+
+     }
+      
     }
     else {
       this.image[key].forEach((element: any, index: any) => {
@@ -167,8 +172,9 @@ export class HomeComponent implements OnInit {
         this.oneSelected = false
       }
     }
+    console.log(this.image);
   }
-
+  
   select() {
     this.selectAll = !this.selectAll
     if (this.selectAll == true) {
