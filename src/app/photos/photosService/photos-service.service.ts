@@ -21,8 +21,24 @@ export class PhotosServiceService {
   archive(id:any,data:any,head:any){
     return this.http.post(this.baseURL+'/archive?userid='+id,data, {headers:head})
   }
+  removearchive(id:any,data:any,head:any){
+    return this.http.post(this.baseURL+'/archive/remove?userid='+id,data, {headers:head})
+  }
+
   bin(id:any,data:any,head:any){
     return this.http.post(this.baseURL+'/bin?userid='+id,data, {headers:head})
+  }
+  
+  deleteForever(id:any,data:any,head:any){
+    return this.http.post(this.baseURL+'/bin/deleteforever?userid='+id,data, {headers:head})
+  }
+
+  restoreBin(id:any,data:any,head:any){
+    return this.http.post(this.baseURL+'/bin/restore?userid='+id,data, {headers:head})
+  }
+
+  getbin(id:any,head:any){
+    return this.http.get(this.baseURL+'/bin?userid='+id, {headers:head})
   }
 
 }

@@ -13,10 +13,22 @@ export class SidebarComponent implements OnInit {
   token: any
   constructor(private photoservice: PhotosServiceService, private activeroute: ActivatedRoute) {
     activeroute.queryParams.subscribe(params => {
-      this.userId = params['id']
-      this.token = params['token']
-
-
+      if (params['id'] == undefined) {
+        this.userId = localStorage.getItem('userid')        
+        this.token = localStorage.getItem('token')
+        console.log(this.userId);
+        if (this.userId == undefined) {
+          location.replace('http://localhost:4200/')
+        }
+        if (this.userId==null) {
+          location.replace('http://localhost:4200/')
+        }
+      } else {
+        this.userId = params['id']
+        this.token = params['token']
+        localStorage.setItem('userid', this.userId)
+        localStorage.setItem('token', this.token)
+      }
     })
   }
 
@@ -110,7 +122,11 @@ export class SidebarComponent implements OnInit {
       title: "Archive",
       path: "/archive",
       icon: "fa fa-archive"
-
+    },
+    {
+      title: "Bin",
+      path: "/bin",
+      icon: "fa fa-trash"
     }
   ]
 

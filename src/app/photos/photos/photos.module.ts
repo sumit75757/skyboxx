@@ -10,6 +10,7 @@ import { MaterialModule } from 'src/app/material/material.module';
 import { DateformetPipe } from '../photosService/dateformet.pipe';
 import { HomeComponent } from './home/home.component';
 import { ArchiveComponent } from './archive/archive.component';
+import { BinComponent } from './bin/bin.component';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { ArchiveComponent } from './archive/archive.component';
     SidebarComponent,
     DateformetPipe,
     HomeComponent,
-    ArchiveComponent
+    ArchiveComponent,
+    BinComponent
   ],
   imports: [
     CommonModule,

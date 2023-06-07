@@ -28,10 +28,12 @@
 
           </div>
           <div *ngIf="isLogedin" class="relative ml-3">
-            <button 
-              class="px-3 py-1 duration-300 rounded-2xl me-3 border-2 border-light_Surface hover:border-light_Primary_Varient  hover:text-light_Primary_Varient dark:border-bgg dark:text-dark_On_Surface dark:hover:border-dark_On_Surface" (click)="redirect('drive')" >Drive</button>
-            <button 
-              class="px-3 py-1 duration-200 rounded-2xl border-2 border-light_Surface  hover:border-light_Primary_Varient hover:text-light_Primary_Varient dark:border-bgg dark:text-dark_On_Surface dark:hover:border-dark_On_Surface  " (click)="redirect('photos')">Photos</button>
+            <button
+              class="px-3 py-1 duration-300 rounded-2xl me-3 border-2 border-light_Surface hover:border-light_Primary_Varient  hover:text-light_Primary_Varient dark:border-bgg dark:text-dark_On_Surface dark:hover:border-dark_On_Surface"
+              (click)="redirect('drive')">Drive</button>
+            <button
+              class="px-3 py-1 duration-200 rounded-2xl border-2 border-light_Surface  hover:border-light_Primary_Varient hover:text-light_Primary_Varient dark:border-bgg dark:text-dark_On_Surface dark:hover:border-dark_On_Surface  "
+              (click)="redirect('photos')">Photos</button>
 
           </div>
         </div>
@@ -57,10 +59,18 @@
       </button>
     </div>
     <!--Right Col-->
-    <div class="w-full md:w-3/5 py-6 text-center flex justify-center">
+    <div class="w-3/5 py-6 text-center flex justify-center">
       <img class="w-full md:w-3/5 " src="https://preview.tailwindtemplates.co/shine/assets/img/hero.svg" />
-      <!-- <img class="w-full md:w-3/5 " src="https" /> -->
+      <!-- <img class="w-2/5 " src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500" /> -->
     </div>
+    <!-- <div style="" class="flex items-center justify-end h-screen overflow-hidden">
+
+    <div style="height: 950px; width: 950px; transform: rotate(45deg);"  class="  bg-light_Error" ></div>
+
+  <div class="container px-3 mx-auto flex flex-wrap flex-col md:flex-row items-center">
+      <div class="w-full py-6 text-center flex justify-end">
+        <img class="w-2/5 " src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500" />
+      </div>
+    </div> 
+  </div> -->
   </div>
-  <!-- </div> -->
-</div>

@@ -13,16 +13,27 @@ export class HomeComponent implements OnInit {
   visible = false;
 
 
-  constructor(private photoservice: PhotosServiceService, private activeroute: ActivatedRoute,public sidbar:SidebarComponent) {
+  constructor(private photoservice: PhotosServiceService, private activeroute: ActivatedRoute, public sidbar: SidebarComponent) {
     activeroute.queryParams.subscribe(params => {
-      this.userId = params['id']
-      this.token = params['token']
-      localStorage.setItem('userid', this.userId)
-      localStorage.setItem('token', this.token)
-
-
+      if (params['id'] == undefined) {
+        this.userId = localStorage.getItem('userid')        
+        this.token = localStorage.getItem('token')
+        console.log(this.userId);
+        if (this.userId == undefined) {
+          location.replace('http://localhost:4200/')
+        }
+        if (this.userId==null) {
+          location.replace('http://localhost:4200/')
+        }
+      } else {
+        this.userId = params['id']
+        this.token = params['token']
+        localStorage.setItem('userid', this.userId)
+        localStorage.setItem('token', this.token)
+      }
     })
   }
+
   userId: any
   token: any
 
@@ -31,62 +42,44 @@ export class HomeComponent implements OnInit {
 
   imageArray: any
   imageObj: any = []
- 
+
   // imagePaths: any = []
   image: { [key: string]: any[] } = {};
 
   ngOnInit(): void {
-    
-    
     this.imageGet()
   }
 
   imageGet() {
-
     this.imageArray = []
     this.imageObj = []
 
     let headers = new HttpHeaders();
     headers = headers.set('Authorization', `Bearer ${this.token}`);
-    console.log(headers.get('Authorization'));
-
     this.photoservice.getPhotos(this.userId, headers).subscribe((res: any) => {
-      console.log(res);
-
-
       this.imageArray = res.result[0].image
-      console.log(this.imageArray);
-      this.imageObj = Object.keys(this.imageArray)
-      // for (const mainkey in this.imageArray) {
-      //   let flag = true
-      //   this.imageArray[mainkey].forEach((element:any) => {
-      //     if (element.archive == false) {
-      //       this.imageObj.forEach((savedkey:any) => {
-      //         if (mainkey==savedkey) {
-      //           flag = false
-      //         }
-      //       });
-      //       if (flag == true) {
-
-      //         this.imageObj.push(mainkey)
-      //       }
-      //    }
-
-      //   });
-      // }
-      console.log(this.imageObj);
-      console.log(this.imageArray);
-
+      // this.imageObj = Object.keys(this.imageArray)
+      for (const mainkey in this.imageArray) {
+        let flag = true
+        this.imageArray[mainkey].forEach((element: any) => {
+          if (element.archive == false) {
+            this.imageObj.forEach((savedkey: any) => {
+              if (mainkey == savedkey) {
+                flag = false
+              }
+            });
+            if (flag == true) {
+              this.imageObj.push(mainkey)
+            }
+          }
+        });
+      }
       this.imageObj.sort(this.compareDates);
       this.imageObj.reverse()
-
-
     },
       (err) => {
         console.log(err);
-
       })
-
   }
 
   compareDates(date1: any, date2: any) {
@@ -99,13 +92,11 @@ export class HomeComponent implements OnInit {
     var month1 = parseInt(parts1[0]);
     var month2 = parseInt(parts2[0]);
 
-
     if (year1 < year2) {
       return -1;
     } else if (year1 > year2) {
       return 1;
     } else {
-
       if (month1 < month2) {
         return -1;
       } else if (month1 > month2) {
@@ -116,37 +107,33 @@ export class HomeComponent implements OnInit {
     }
   }
 
-
-
-
-
-
   archive() {
-    let data = {
-      "image": this.image
+    if (confirm("Confirm Archive")) {
+      let data = {
+        "image": this.image
+      }
+      let headers = new HttpHeaders();
+      headers = headers.set('Authorization', `Bearer ${this.token}`);
+      this.photoservice.archive(this.userId, data, headers).subscribe(res => {
+        this.imageGet()
+      })
     }
-    let headers = new HttpHeaders();
-    headers = headers.set('Authorization', `Bearer ${this.token}`);
-    this.photoservice.archive(this.userId, data, headers).subscribe(res => {
-      console.log(res);
-      this.imageGet()
-
-    })
-
-
   }
 
-  bin(){
-    let data = {
-      "image": this.image
-    }
-    let headers = new HttpHeaders();
-    headers = headers.set('Authorization', `Bearer ${this.token}`);
-    this.photoservice.bin(this.userId, data, headers).subscribe(res => {
-      console.log(res);
-      this.imageGet()
-
-    })
+  bin() {
+   if (confirm("Bin the Image")) {
+     let data = {
+       "image": this.image
+     }
+     console.log(data);
+     
+     let headers = new HttpHeaders();
+     headers = headers.set('Authorization', `Bearer ${this.token}`);
+     this.photoservice.bin(this.userId, data, headers).subscribe(res => {
+       console.log(res);
+       this.imageGet()
+     })
+   }
   }
 
   fetcthSelected(data: any, key: any, event: any) {
@@ -161,18 +148,17 @@ export class HomeComponent implements OnInit {
           if (k == key) {
             this.image[key].push(data)
           } else {
-            this.image[key] = []
+            this.image[key] =  []
             this.image[key].push(data)
           }
         })
       }
     }
-    else{
-      this.image[key].forEach((element: any,index: any)=>{
-        console.log(element._id);
-        if (element._id==data._id) {
-          this.image[key].splice(index,1)
-          if (this.image[key].length==0) {
+    else {
+      this.image[key].forEach((element: any, index: any) => {
+        if (element._id == data._id) {
+          this.image[key].splice(index, 1)
+          if (this.image[key].length == 0) {
             delete this.image[key]
           }
         }
@@ -181,22 +167,15 @@ export class HomeComponent implements OnInit {
         this.oneSelected = false
       }
     }
-    console.log(this.image);
-
-
-    
   }
 
   select() {
     this.selectAll = !this.selectAll
-if (this.selectAll==true) {
-  this.image=this.imageArray    
-} else {
-  this.image={}
-}    
-
-
-    
+    if (this.selectAll == true) {
+      this.image = this.imageArray
+    } else {
+      this.image = {}
+    }
     this.oneSelected = this.selectAll
   }
 }

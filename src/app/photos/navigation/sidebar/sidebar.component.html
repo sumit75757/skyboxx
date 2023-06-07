@@ -51,10 +51,12 @@
         </nav>
       </mat-nav-list>
     </mat-sidenav>
-    <div class=" dark:bg-fulldark duration-500">
+    <div class="dark:bg-darkblue max-h-max">
       <app-header (toggle)="togle(sidenav)" (data)="doSomething($event)">
       </app-header>
-      <router-outlet></router-outlet>
+      <div style="transition-delay: 500ms ;">
+        <router-outlet></router-outlet>
+      </div>
     </div>
   </mat-sidenav-container>
 </div>
