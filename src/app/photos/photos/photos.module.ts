@@ -11,6 +11,7 @@ import { DateformetPipe } from '../photosService/dateformet.pipe';
 import { HomeComponent } from './home/home.component';
 import { ArchiveComponent } from './archive/archive.component';
 import { BinComponent } from './bin/bin.component';
+import { FavoritesComponent } from './favorites/favorites.component';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { BinComponent } from './bin/bin.component';
     DateformetPipe,
     HomeComponent,
     ArchiveComponent,
-    BinComponent
+    BinComponent,
+    FavoritesComponent
   ],
   imports: [
     CommonModule,

@@ -52,6 +52,7 @@ export class AuthComponent implements OnInit {
         delete res.response
         
         localStorage.setItem("user",JSON.stringify(res))
+        localStorage.setItem("theme",'false')
         this.route.navigate([''])
        console.log(res);
       

@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { PhotosServiceService } from '../../photosService/photos-service.service';
 import { ActivatedRoute } from '@angular/router';
 import { HttpHeaders } from '@angular/common/http';
 import { SidebarComponent } from '../../navigation/sidebar/sidebar.component';
-
+import { saveAs } from 'file-saver';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -11,27 +11,31 @@ import { SidebarComponent } from '../../navigation/sidebar/sidebar.component';
 })
 export class HomeComponent implements OnInit {
   visible = false;
+  isContent: any;
+  fullScreenVisiblity = false
+  fullScreenImgArray: any[] =[]
+  infovisiblity:boolean =false
 
 
   constructor(private photoservice: PhotosServiceService, private activeroute: ActivatedRoute, public sidbar: SidebarComponent) {
-    activeroute.queryParams.subscribe(params => {
-      if (params['id'] == undefined) {
-        this.userId = localStorage.getItem('userid')        
+    // activeroute.queryParams.subscribe(params => {
+    //   if (params['id'] == undefined) {
+        this.userId = localStorage.getItem('userid')
         this.token = localStorage.getItem('token')
-        console.log(this.userId);
-        if (this.userId == undefined) {
-          location.replace('http://localhost:4200/')
-        }
-        if (this.userId==null) {
-          location.replace('http://localhost:4200/')
-        }
-      } else {
-        this.userId = params['id']
-        this.token = params['token']
-        localStorage.setItem('userid', this.userId)
-        localStorage.setItem('token', this.token)
-      }
-    })
+    //     // console.log(this.userId);
+    //     if (this.userId == undefined) {
+    //       location.replace('http://localhost:4200/')
+    //     }
+    //     if (this.userId == null) {
+    //       location.replace('http://localhost:4200/')
+    //     }
+    //   } else {
+    //     this.userId = params['id']
+    //     this.token = params['token']
+    //     localStorage.setItem('userid', this.userId)
+    //     localStorage.setItem('token', this.token)
+    //   }
+    // })
   }
 
   userId: any
@@ -48,6 +52,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.imageGet()
+
   }
 
   imageGet() {
@@ -73,6 +78,11 @@ export class HomeComponent implements OnInit {
             }
           }
         });
+      }
+      if (this.imageObj.length == 0) {
+        this.isContent = false
+      } else {
+        this.isContent = true
       }
       this.imageObj.sort(this.compareDates);
       this.imageObj.reverse()
@@ -108,55 +118,73 @@ export class HomeComponent implements OnInit {
   }
 
   archive() {
-    if (confirm("Confirm Archive")) {
-      let data = {
-        "image": this.image
+    if (Object.keys(this.image).length) {
+      if (confirm("Confirm Archive")) {
+        let data = {
+          "image": this.image
+        }
+        let headers = new HttpHeaders();
+        headers = headers.set('Authorization', `Bearer ${this.token}`);
+        this.photoservice.archive(this.userId, data, headers).subscribe(res => {
+          this.imageGet()
+          this.selectAll = false
+          this.oneSelected = false
+          this.image = {}
+
+        })
       }
-      let headers = new HttpHeaders();
-      headers = headers.set('Authorization', `Bearer ${this.token}`);
-      this.photoservice.archive(this.userId, data, headers).subscribe(res => {
-        this.imageGet()
-      })
+    } else {
+      alert("Select Something To Archive")
     }
   }
-
+  
   bin() {
-   if (confirm("Bin the Image")) {
-     let data = {
-       "image": this.image
-     }
-     console.log(data);
-     
-     let headers = new HttpHeaders();
-     headers = headers.set('Authorization', `Bearer ${this.token}`);
-     this.photoservice.bin(this.userId, data, headers).subscribe(res => {
-       console.log(res);
-       this.imageGet()
-     })
-   }
+    if (Object.keys(this.image).length != 0) {
+      if (confirm("Bin the Image")) {
+        let data = {
+          "image": this.image
+        }
+        console.log(data);
+        
+        let headers = new HttpHeaders();
+        headers = headers.set('Authorization', `Bearer ${this.token}`);
+        this.photoservice.bin(this.userId, data, headers).subscribe(res => {
+          console.log(res);
+          this.imageGet()
+          this.selectAll = false
+          this.oneSelected = false
+          this.image = {}
+        })
+      }
+    } else {
+      alert("Select Something To Bin")
+    }
   }
+test(event:any){
+console.log(event);
 
+}
   fetcthSelected(data: any, key: any, event: any) {
-    console.log(data);
-    
+    // console.log(data);
+
     let allKeys = Object.keys(this.image)
     if (event.target.checked) {
-      let found=false
+      let found = false
       this.oneSelected = true
-
-      allKeys.forEach(el=>{
-        if (el==key) {
+      
+      allKeys.forEach(el => {
+        if (el == key) {
           found = true
         }
       })
-
-     if (found==false) {
-      this.image[key]=[]
-      this.image[key].push(data)
-    }else{
-       this.image[key].push(data)
-
-     }
+      
+      if (found == false) {
+        this.image[key] = []
+        this.image[key].push(data)
+      } else {
+        this.image[key].push(data)
+        
+      }
       
     }
     else {
@@ -172,16 +200,166 @@ export class HomeComponent implements OnInit {
         this.oneSelected = false
       }
     }
-    console.log(this.image);
+    // console.log(this.image);
   }
   
   select() {
     this.selectAll = !this.selectAll
     if (this.selectAll == true) {
-      this.image = this.imageArray
+      this.imageObj.forEach((key: any) => {
+        this.imageArray[key].forEach((imageData: any) => {
+          if (imageData.archive == false) {
+            if (Object.keys(this.image).length == 0) {
+              this.image[key] = []
+              this.image[key].push(imageData)
+            } else {
+              let flag = false
+              Object.keys(this.image).forEach(imgKey => {
+                if (imgKey == key) {
+                  flag = true
+                }
+              })
+              if (flag) {
+                this.image[key].push(imageData)
+              } else {
+                this.image[key] = []
+                this.image[key].push(imageData)
+              }
+              
+            }
+          }
+        });
+      });
+      
+      // console.log(this.image);
+      
     } else {
       this.image = {}
     }
     this.oneSelected = this.selectAll
   }
+  index: any
+  
+  imgFullScreen(url: any) {
+    this.fullScreenImgArray = []
+    this.photoservice.toggleSidenav(false)
+    // this.img=url
+    this.imageObj.forEach((key: any) => {
+      this.imageArray[key].forEach((imgData: any) => {
+        if (imgData.archive == false) {
+          
+          this.fullScreenImgArray.push(imgData.img)
+        }
+      })
+    });
+    this.fullScreenImgArray.forEach((img: any, ind: any) => {
+      if (img == url) {
+        this.index = ind
+      }
+    })
+    console.log(this.index);
+    
+    this.fullScreenVisiblity = true
+    
+  }
+  @HostListener('document:keydown.arrowright')
+  next(): void {
+    if (this.fullScreenImgArray.length - 1 != this.index) {
+      this.index++
+      this.infovisiblity = false
+      
+    }
+  }
+
+  @HostListener('document:keydown.arrowleft')
+  prev() {
+    if (this.index != 0) {
+      this.index--
+      this.infovisiblity = false
+    }
+  }
+  
+  closeImgFullScreen() {
+    
+    this.photoservice.toggleSidenav(true)
+    
+    
+    this.fullScreenVisiblity = false
+    this.infovisiblity = false
+  }
+imgSize:any
+imgName:any
+  info(){
+
+    this.infovisiblity = !this.infovisiblity
+        let name = this.fullScreenImgArray[this.index].split('/').pop();
+        let pos = name.indexOf('Z')
+         this.imgName = name.substring(pos + 2)
+
+    
+    console.log(this.fullScreenImgArray[this.index]);
+    let headers = new HttpHeaders();
+    headers = headers.set('Authorization', `Bearer ${this.token}`);
+    this.photoservice.getInfo(this.fullScreenImgArray[this.index], headers).subscribe((res:any)=>{
+this.imgSize = (res.stats.size/(1024*1000)).toFixed(2)      
+    })
+    
+  }
+
+  download() {
+    if (Object.keys(this.image).length) {
+    let imageId: any[] = []
+    let keys = Object.keys(this.image)
+    
+    keys.forEach(key => {
+      this.image[key].forEach(singleImg => {
+        imageId.push(singleImg._id)
+      });
+    });
+
+    let headers = new HttpHeaders();
+    headers = headers.set('Authorization', `Bearer ${this.token}`);
+    this.photoservice.download(this.userId, imageId, headers).subscribe((res: any) => {
+      
+      
+      if (imageId.length > 1) {
+        saveAs(res, 'Photos.zip')
+      } else {
+        let tempName = this.image[keys[0]][0].img
+        let fileType = tempName.split('.').pop();
+        let name = tempName.split('/').pop();
+        let pos = name.indexOf('Z')
+        const imgName = name.substring(pos + 2)
+        const blob = new Blob([res], { type: `image/${fileType}` });
+        console.log(blob);
+        saveAs(blob, imgName);
+      }
+      
+    });
+  }else {
+      alert("Select Something To Download")
+    }
+  }
+
+  favorite(){
+    if (Object.keys(this.image).length) {
+      if (confirm("Confirm Favorite")) {
+        let data = {
+          "image": this.image
+        }
+        let headers = new HttpHeaders();
+        headers = headers.set('Authorization', `Bearer ${this.token}`);
+        this.photoservice.favorite(this.userId, data, headers).subscribe(res => {
+          this.imageGet()
+          this.selectAll = false
+          this.oneSelected = false
+          this.image = {}
+
+        })
+      }
+    } else {
+      alert("Select Something To Favorite")
+    }
+  }
+  
 }

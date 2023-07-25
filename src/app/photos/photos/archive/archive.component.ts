@@ -1,6 +1,7 @@
 import { HttpHeaders } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { PhotosServiceService } from '../../photosService/photos-service.service';
+import { SidebarComponent } from '../../navigation/sidebar/sidebar.component';
 
 @Component({
   selector: 'app-archive',
@@ -16,9 +17,12 @@ export class ArchiveComponent implements OnInit {
   imagePaths: any = []
   selectAll = false
   oneSelected = false
+  isContent:any
+  fullScreenVisiblity = false
+  fullScreenImgArray: any
   image: { [key: string]: any[] } = {};
 
-  constructor(private photoservice: PhotosServiceService) {
+  constructor(private photoservice: PhotosServiceService,public sidbar: SidebarComponent) {
     this.token = localStorage.getItem("token")
     this.userId = localStorage.getItem("userid")
 
@@ -59,7 +63,12 @@ export class ArchiveComponent implements OnInit {
 
         });
       }
-      console.log(this.imageObj);
+if (this.imageObj.length == 0) {
+  this.isContent = false
+}else{
+this.isContent =true
+}
+console.log(this.isContent);
 
       this.imageObj.sort(this.compareDates);
       this.imageObj.reverse()
@@ -100,44 +109,51 @@ export class ArchiveComponent implements OnInit {
   }
 
   unArchive() {
-    if (confirm("Confirm Restore")) {
-      let data = {
-        "image": this.image
-      }
-      let headers = new HttpHeaders();
-      headers = headers.set('Authorization', `Bearer ${this.token}`);
-      this.photoservice.removearchive(this.userId, data, headers).subscribe(res => {
-        console.log(res);
-        this.imageGet()
+if (Object.keys(this.image).length != 0) {
+      
+  if (confirm("Confirm Restore")) {
+    let data = {
+      "image": this.image
+    }
+    let headers = new HttpHeaders();
+    headers = headers.set('Authorization', `Bearer ${this.token}`);
+    this.photoservice.removearchive(this.userId, data, headers).subscribe(res => {
+      console.log(res);
+      this.selectAll = false
+      this.imageGet()
+      this.selectAll=false
+      this.oneSelected = false
+      
+    })
+  }
   
+  
+}else{
+  alert("Select Something To UnArchive")
+}
+}
+
+
+fetcthSelected(data: any, key: any, event: any) {
+  let allKeys = Object.keys(this.image)
+  if (event.target.checked) {
+    this.oneSelected = true
+    if (allKeys.length == 0) {
+      this.image[key] = []
+      this.image[key].push(data)
+    } else {
+      allKeys.forEach(k => {
+        if (k == key) {
+          this.image[key].push(data)
+        } else {
+          this.image[key] = []
+          this.image[key].push(data)
+        }
       })
     }
-
-
   }
-
-
-  fetcthSelected(data: any, key: any, event: any) {
-    let allKeys = Object.keys(this.image)
-    if (event.target.checked) {
-      this.oneSelected = true
-      if (allKeys.length == 0) {
-        this.image[key] = []
-        this.image[key].push(data)
-      } else {
-        allKeys.forEach(k => {
-          if (k == key) {
-            this.image[key].push(data)
-          } else {
-            this.image[key] = []
-            this.image[key].push(data)
-          }
-        })
-      }
-    }
     else {
       this.image[key].forEach((element: any, index: any) => {
-        console.log(element._id);
         if (element._id == data._id) {
           this.image[key].splice(index, 1)
           if (this.image[key].length == 0) {
@@ -158,7 +174,30 @@ export class ArchiveComponent implements OnInit {
   select() {
     this.selectAll = !this.selectAll
     if (this.selectAll == true) {
-      this.image = this.imageArray
+      this.imageObj.forEach((key:any) => {
+        this.imageArray[key].forEach((imageData:any) => {
+         if (imageData.archive == true) {
+          if( Object.keys(this.image).length ==0){
+            this.image[key] = []
+            this.image[key].push(imageData)
+                      }else{
+                        let flag =false
+                        Object.keys(this.image).forEach(imgKey =>{
+                          if(imgKey == key){
+                            flag = true
+                          }
+                        })
+                        if (flag) {
+                          this.image[key].push(imageData)
+                      }else{
+                        this.image[key]=[]
+                        this.image[key].push(imageData)
+                      }
+                        
+                      }
+         }
+        });
+      });
     } else {
       this.image = {}
     }
@@ -166,6 +205,56 @@ export class ArchiveComponent implements OnInit {
 
 
     this.oneSelected = this.selectAll
+  }
+
+  index: any
+  
+  imgFullScreen(url: any) {
+    this.fullScreenImgArray = []
+    this.photoservice.toggleSidenav(false)
+    // this.img=url
+    this.imageObj.forEach((key: any) => {
+      this.imageArray[key].forEach((imgData: any) => {
+        if (imgData.archive == true) {
+          
+          this.fullScreenImgArray.push(imgData.img)
+        }
+      })
+    });
+    this.fullScreenImgArray.forEach((img: any, ind: any) => {
+      if (img == url) {
+        this.index = ind
+      }
+    })
+    console.log(this.index);
+    
+    this.fullScreenVisiblity = true
+    
+  }
+  
+  @HostListener('document:keydown.arrowright')
+      next(): void {
+
+        
+        if (this.fullScreenImgArray.length - 1 != this.index) {
+          this.index++
+          
+        }
+      }
+    
+      @HostListener('document:keydown.arrowleft')
+      prev() {
+        if (this.index != 0) {
+          this.index--
+        }
+      }
+  
+  closeImgFullScreen() {
+    
+    this.photoservice.toggleSidenav(true)
+    
+    
+    this.fullScreenVisiblity = false
   }
 
 }

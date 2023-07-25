@@ -26,4 +26,12 @@ export class HeaderComponent implements OnInit {
   sidetoggle(){
     this.toggle.emit()
   }
+
+  logout(){
+  if(confirm("Do you really want to logout")){
+    localStorage.clear()
+    location.replace('http://localhost:4200/?status=logout')
+  }
+
+  }
 }

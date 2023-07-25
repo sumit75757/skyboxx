@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {  Router } from '@angular/router';
+import {  ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -7,7 +7,17 @@ import {  Router } from '@angular/router';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {  
-  constructor(private route:Router) { }
+  constructor(private route:Router,private activeroute : ActivatedRoute) {
+    activeroute.queryParamMap.subscribe((res:any)=>{
+      if (res.params.status =='logout') {
+        localStorage.clear();
+        location.replace('http://localhost:4200')
+      }else{
+
+      }
+      
+    })
+   }
 isLogedin:any
 userID:any
 token:any
@@ -17,6 +27,8 @@ token:any
     // console.log(this.host);
     
     this.isDarkEnable= JSON.parse(localStorage.getItem('theme')+'')
+    console.log(this.isDarkEnable);
+    
     this.isLogedin=localStorage.getItem('user')
     this.isLogedin = JSON.parse(this.isLogedin)
     console.log(this.isLogedin);
@@ -32,7 +44,7 @@ token:any
   }
 
   redirect(path:any){
-    window.open('http://'+path+'.localhost:4200?id='+this.userID+'&token='+this.token, '_self')
+    window.open('http://'+path+'.localhost:4200?id='+this.userID+'&token='+this.token+'&theme='+this.isDarkEnable, '_self')
   }
   
  

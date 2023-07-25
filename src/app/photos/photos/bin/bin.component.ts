@@ -1,5 +1,5 @@
 import { HttpHeaders } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { PhotosServiceService } from '../../photosService/photos-service.service';
 
 @Component({
@@ -15,6 +15,9 @@ export class BinComponent implements OnInit {
   oneSelected = false
   imageArray: any
   image: any = []
+  isContent = true
+  fullScreenVisiblity = false
+  fullScreenImgArray: any
 
 
   constructor(private photoservice: PhotosServiceService) {
@@ -26,6 +29,7 @@ export class BinComponent implements OnInit {
 
   ngOnInit(): void {
     this.getImage()
+   
   }
 
   getImage() {
@@ -39,7 +43,11 @@ export class BinComponent implements OnInit {
       
       if (res.result.length !=0) {
         this.imageArray = res.result[0].image
-      }else{
+          this.isContent = true
+          
+        }else{
+          
+          this.isContent = false
         this.imageArray=[]
       }
       console.log(this.imageArray);
@@ -63,42 +71,106 @@ export class BinComponent implements OnInit {
       if (this.image.length == 0) {
         this.oneSelected = false
       }
+      console.log(this.image);
+      
     }
   }
+
+  // fetcthSelected(data: any, key: any, event: any) {
+  //   // console.log(data);
+
+  //   let allKeys = Object.keys(this.image)
+  //   if (event.target.checked) {
+  //     let found = false
+  //     this.oneSelected = true
+      
+  //     allKeys.forEach(el => {
+  //       if (el == key) {
+  //         found = true
+  //       }
+  //     })
+      
+  //     if (found == false) {
+  //       this.image[key] = []
+  //       this.image[key].push(data)
+  //     } else {
+  //       this.image[key].push(data)
+        
+  //     }
+      
+  //   }
+  //   else {
+  //     this.image[key].forEach((element: any, index: any) => {
+  //       if (element._id == data._id) {
+  //         this.image[key].splice(index, 1)
+  //         if (this.image[key].length == 0) {
+  //           delete this.image[key]
+  //         }
+  //       }
+  //     })
+  //     if (Object.keys(this.image).length == 0) {
+  //       this.oneSelected = false
+  //     }
+  //   }
+  //   // console.log(this.image);
+  // }
 
   restore() {
-    if (confirm("Restore")) {
-      let data = {
-        "image": this.image
+    if (Object.keys(this.image).length !=0) {
+      
+      if (confirm("Restore")) {
+        let data = {
+          "image": this.image
+        }
+        let headers = new HttpHeaders();
+        headers = headers.set('Authorization', `Bearer ${this.token}`);
+        this.photoservice.restoreBin(this.userId, data, headers).subscribe(res => {
+          console.log(res);
+          this.getImage()
+          this.image = {}
+
+          this.selectAll=false
+          this.oneSelected =false
+        })
       }
-      let headers = new HttpHeaders();
-      headers = headers.set('Authorization', `Bearer ${this.token}`);
-      this.photoservice.restoreBin(this.userId, data, headers).subscribe(res => {
-        console.log(res);
-        this.getImage()
-      })
+      
+    }else{
+      alert("Select Something To Restore")
     }
-
   }
-
+  
   deleteForever(){
-    if (confirm("Delete Forever")) {
-      let data = {
-        "image": this.image
+    if (Object.keys(this.image).length !=0) {
+      
+      if (confirm("Delete Forever")) {
+        let data = {
+          "image": this.image
+        }
+        
+        let headers = new HttpHeaders();
+        headers = headers.set('Authorization', `Bearer ${this.token}`);
+        this.photoservice.deleteForever(this.userId, data, headers).subscribe(res => {
+          console.log(res);
+          this.getImage()
+          this.image = {}
+
+          this.selectAll=false
+          this.oneSelected =false
+
+        })
       }
-      let headers = new HttpHeaders();
-      headers = headers.set('Authorization', `Bearer ${this.token}`);
-      this.photoservice.deleteForever(this.userId, data, headers).subscribe(res => {
-        console.log(res);
-        this.getImage()
-      })
+    }else{
+      alert("Select Something To Delete Forever")
     }
   }
-
+  
   select() {
     this.selectAll = !this.selectAll
     if (this.selectAll == true) {
-      this.image = this.imageArray
+      console.log(this.imageArray);
+      this.imageArray.forEach((img:any) => {
+        this.image.push(img)
+      });
       this.oneSelected = true
     } else {
       this.image = []
@@ -109,6 +181,54 @@ export class BinComponent implements OnInit {
 
 
     // this.oneSelected = this.selectAll
+  }
+
+  index: any
+  
+  imgFullScreen(url: any) {
+    this.fullScreenImgArray = []
+    this.photoservice.toggleSidenav(false)
+    // this.img=url
+   
+      this.imageArray.forEach((imgData: any) => {
+       
+          
+          this.fullScreenImgArray.push(imgData.img)
+        
+      })
+  
+    this.fullScreenImgArray.forEach((img: any, ind: any) => {
+      if (img == url) {
+        this.index = ind
+      }
+    })
+    console.log(this.index);
+    
+    this.fullScreenVisiblity = true
+    
+  }
+  
+  @HostListener('document:keydown.arrowright')
+  next(): void {
+    if (this.fullScreenImgArray.length - 1 != this.index) {
+      this.index++
+      
+    }
+  }
+
+  @HostListener('document:keydown.arrowleft')
+  prev() {
+    if (this.index != 0) {
+      this.index--
+    }
+  }
+  
+  closeImgFullScreen() {
+    
+    this.photoservice.toggleSidenav(true)
+    
+    
+    this.fullScreenVisiblity = false
   }
 
 }
