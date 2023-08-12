@@ -84,6 +84,7 @@ export class FavoritesComponent implements OnInit {
 
   unFavorite() {
     if (Object.keys(this.image).length != 0) {
+      console.log(this.image);
           
       if (confirm("Confirm UnFavorite")) {
         let data = {

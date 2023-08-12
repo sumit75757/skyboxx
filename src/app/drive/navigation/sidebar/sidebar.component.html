@@ -1,0 +1,157 @@
+<div class="{{ isDarkEnable ? 'dark' : '' }}">
+    <mat-sidenav-container fullscreen>
+        <mat-sidenav #sidenav class="mat-elevation-z4 w-64 duration-500 dark:bg-darkblue bg-cream" mode="side"
+            opened="true">
+            <mat-nav-list>
+                <nav id="sidenav-2"
+                    class="fixed ml-0 left-0 dark:bg-darkblue duration-500  top-0 z-[1035] h-screen w-60 -translate-x-full overflow-hidden bg-white shadow-[0_4px_12px_0_rgba(0,0,0,0.07),_0_2px_4px_rgba(0,0,0,0.05)] data-[te-sidenav-hidden='false']:translate-x-0 "
+                    data-te-sidenav-init data-te-sidenav-hidden="false" data-te-sidenav-mode="side"
+                    data-te-sidenav-content="#content">
+                    <div class="float-right lg:hidden">
+                        <button (click)="togle(sidenav)">
+                            <i class="fa fa-arrow-left dark:text-text-dark text-text-dark w-8"></i>
+                        </button>
+                    </div>
+                    <div class="w-42 h-32 py-12 flex justify-center">
+                        <img class="block h-8 w-auto lg:hidden"
+                            src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500" alt="Your Company" />
+                        <img class="hidden h-8 w-auto lg:block"
+                            src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500" alt="Your Company" />
+                    </div>
+
+                    <!-- Upload Button -->
+                    <div class="text-center hidden md:block mb-10">
+                        <!-- <div *ngIf="isDarkEnable" style="background: #a7baff"
+                            class=" inline-block rounded-3xl shadow-lg p-4 ">
+                             <button type="" class="text-xl opacity-95 "><i class="fa-solid fa-upload"></i>
+                                Upload</button> 
+                        </div> -->
+                        <div  style="background-color: #a7baff;"
+                            class=" inline-block rounded-3xl shadow-lg p-4 ">
+                            <button type="" (click)="togggle()" class="text-xl opacity-95 "><i
+                                    class="fa-solid fa-plus"></i>
+                                New</button>
+                            <div id="dropdownMenu" [class]="isDropdownVisible?'':'hidden'"
+                                class=" mt-2 w-48  rounded  ">
+                                <a (click)="createNewFolder()"
+                                    class="block rounded  px-4 py-2 text-gray-800 hover:shadow-lg"><i
+                                        class="fa-regular fa-folder me-2"></i>New Folder</a>
+                                <a (click)="uploadNewFile()" class="block px-4 py-2 text-gray-800 hover:shadow-lg"><img
+                                        style="margin-right: 0.3rem;
+                                    display: inline;
+                                    width: 20px;
+                                    padding-bottom: 10px;"
+                                        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAABWUlEQVR4nO3YzUrDQBDA8f/moOi7+IB6kRZ7rznoqb6N+BDmKdSDhcJIYYUlhJrNzH5Id2ApLU1mfiRsJgMtWrSYE9fAGhiAAyCRaw88Ah2Fin9bUPTU2pVArI2KL4YYguS3wEXk8cURhyBxbPHUcCUkWNrjdyUQYghwwNPot5fUCEsAJRBiDMiOkASArAhJBDhGFoQW8Nc23KXenbSA8EF4VwIhSsBK0Xb0NQCugNeFgO8aAL+Ie+B9QTuuDtOTlcgpDRAf0q5AEO0WOsdb6Aa49J//EmAauQGdbyG+rGZJOQEOeLZur3MB3ETxJogcAHeieDUiNcDNKF6FSA3oJ15kTn3vawN8TryFhTnHb2sftQE2fsvcBrfHOGfnt9Tj/x5iE7Re6Bx7IbHMqR2vFwcMM+Y6VQNWkVMEzUoC0Mx1qgBo5zpVAHLH3nIyVyI2vsWIfuq2IHP8ANRzxOm+QTFFAAAAAElFTkSuQmCC">
+                                    File Upload</a>
+                                <a (click)="uploadNewFolder()" class="block px-4 py-2 text-gray-800 hover:shadow-lg">
+                                    <div style="
+                                    width: 22px;
+                                    display: inline-block;
+                                    margin-right: 0.3rem;"> <svg version="1.1" style="width: 20px;" id="Layer_1"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                                            viewBox="0 0 122.88 95.21" style="enable-background:new 0 0 122.88 95.21"
+                                            xml:space="preserve">
+                                            <g>
+                                                <path
+                                                    d="M2.48,20.74h4.5v-9.86c0-1.37,1.11-2.48,2.48-2.48h4.41V2.48c0-1.37,1.11-2.48,2.48-2.48h40.26c1.37,0,2.48,1.11,2.48,2.48 V8.4h54.3c1.37,0,2.48,1.11,2.48,2.48v9.86h4.53c1.37,0,2.48,1.11,2.48,2.48c0,0.18-0.02,0.36-0.05,0.52l-8.68,63.81 c-0.28,2.08-1.19,4.01-2.59,5.4c-1.38,1.38-3.21,2.24-5.36,2.24H14.7c-2.16,0-4.03-0.87-5.42-2.26c-1.41-1.4-2.32-3.35-2.54-5.46 l-6.72-64c-0.14-1.36,0.85-2.58,2.21-2.71C2.31,20.75,2.39,20.75,2.48,20.74L2.48,20.74L2.48,20.74L2.48,20.74z M61.44,32 c7.44,0,14.18,3.02,19.06,7.89c4.88,4.88,7.89,11.61,7.89,19.05c0,7.44-3.02,14.18-7.89,19.06c-4.88,4.88-11.61,7.89-19.06,7.89 C54,85.9,47.26,82.88,42.39,78c-4.88-4.88-7.89-11.61-7.89-19.06c0-7.44,3.02-14.18,7.89-19.05C47.26,35.02,54,32,61.44,32 L61.44,32z M77.16,43.23c-4.02-4.02-9.58-6.51-15.72-6.51c-6.14,0-11.69,2.49-15.71,6.51c-4.02,4.02-6.51,9.58-6.51,15.71 c0,6.14,2.49,11.69,6.51,15.72c4.02,4.02,9.58,6.51,15.71,6.51c6.14,0,11.69-2.49,15.72-6.51c4.02-4.02,6.51-9.58,6.51-15.72 C83.66,52.81,81.18,47.25,77.16,43.23L77.16,43.23z M48.63,56.75h8.12v12.8h9.15v-12.8h8.35l-12.8-12.46L48.63,56.75L48.63,56.75z M9.45,25.71H5.23l6.44,61.27c0.1,0.98,0.49,1.85,1.1,2.46c0.5,0.5,1.16,0.81,1.93,0.81h91.5c0.75,0,1.39-0.3,1.87-0.79 c0.62-0.62,1.03-1.53,1.17-2.55l8.32-61.2H9.45L9.45,25.71L9.45,25.71z M11.94,13.37v7.36l98.97-1.05v-6.31h-54.3 c-1.37,0-2.48-1.11-2.48-2.48V4.97h-35.3v5.92c0,1.37-1.11,2.48-2.48,2.48H11.94L11.94,13.37L11.94,13.37z" />
+                                            </g>
+                                        </svg>
+                                    </div>
+                                    Folder Upload
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Nav Links -->
+                    <ul class="relative m-0 list-none px-[0.2rem]" data-te-sidenav-menu-ref>
+                        <li class="relative mb-3  rounded-r-full bg-lightblue" *ngFor="let i of navigation"
+                            (click)="cleanup()">
+                            <a [routerLink]="[i.path]"
+                                class="flex h-12 cursor-pointer items-center truncate rounded-[5px] px-6 py-4 text-[0.875rem] text-gray-600 outline-none transition duration-300 ease-linear hover:bg-slate-50 hover:text-inherit hover:outline-none focus:bg-slate-50 focus:text-inherit focus:outline-none active:bg-slate-50 active:text-inherit active:outline-none data-[te-sidenav-state-active]:text-inherit data-[te-sidenav-state-focus]:outline-none motion-reduce:transition-none dark:text-gray-300 dark:hover:bg-white/10 dark:focus:bg-white/10 dark:active:bg-white/10"
+                                data-te-sidenav-link-ref>
+                                <span
+                                    class="mr-4 ml-8 [&>svg]:h-4 [&>svg]:w-4 [&>svg]:text-gray-400 dark:[&>svg]:text-gray-300">
+                                    <i class="dark:text-text-dark text-black h-4 w-4" class="{{ i.icon }}"></i>
+                                </span>
+                                <span class="dark:text-text-dark text-black">{{
+                                    i.title
+                                    }}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </mat-nav-list>
+        </mat-sidenav>
+        <div class="dark:bg-darkblue h-screen ">
+            <app-header class (toggle)="togle(sidenav)" (data)="doSomething($event)">
+            </app-header>
+            <div style="transition-delay: 500ms ;">
+                <router-outlet></router-outlet>
+            </div>
+        </div>
+    </mat-sidenav-container>
+</div>
+
+<div *ngIf="newFolder" style="background-color: #6666668a;" class="temp z-50 fixed top-0  left-0 h-screen w-screen ">
+    <div class="h-screen flex  justify-center items-center  ">
+
+        <div *ngIf="type == 'createFolder'" class="bg-light_Surface outline rounded px-7 py-5">
+            <h2 class="text-2xl mb-3">New Folder</h2>
+            <!-- <div class="p-2 outline rounded"> -->
+            <input [(ngModel)]="folderName" type="text" class=" p-2 mb-4" placeholder="Untitled ">
+            <!-- </div>  -->
+            <div class="flex justify-end">
+                <button class=" buttonHover py-2 px-3  rounded-full" (click)="cancelNewFolder()">Cancel</button>
+                <button class="buttonHover py-2 px-3  rounded-full" (click)="createFolder()">Create</button>
+            </div>
+        </div>
+        <!-- <div  class="bg-light_Surface outline rounded px-7 py-5" > -->
+        <div *ngIf="type == 'uploadFile'" class="bg-light_Surface outline rounded px-7 py-5">
+            <h2 class="text-2xl mb-3">File Upload</h2>
+            <ngx-dropzone class="w-96 mb-3 " [multiple]="true" (change)="uploadFile(false,$event)">
+                <ngx-dropzone-label>Drop it or Click it to Select!</ngx-dropzone-label>
+            </ngx-dropzone>
+            <!-- <div class=" border-2 rounded mb-4 ">
+            <input (change)="uploadFile(false,$event)"  type="file" class="test opacity-0" placeholder="Untitled ">
+        </div>  -->
+            <div class="flex justify-end">
+                <button class=" buttonHover py-2 px-3  rounded-full" (click)="cancelNewFolder()">Cancel</button>
+                <button class="buttonHover py-2 px-3  rounded-full" (click)="uploadFile(true)">Upload</button>
+            </div>
+        </div>
+        <div *ngIf="type == 'uploadFolder'" class="bg-light_Surface outline rounded px-7 py-5">
+            <h2 class="text-2xl mb-3">Folder Upload</h2>
+            <div class=" rounded mb-4 ">
+                <input (change)="uploadFolder($event)" webkitdirectory directory   type="file" class="" placeholder="Untitled ">
+                <!-- <div cdkDropList (cdkDropListDropped)="uploadFolder(false,$event)">
+                    <div class="file-drop-zone" cdkDrag>
+                        <div class="file-message">
+                            Drop your folder here
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+            <div class="flex justify-end">
+                <button class=" buttonHover py-2 px-3  rounded-full" (click)="cancelNewFolder()">Cancel</button>
+                <button class="buttonHover py-2 px-3  rounded-full" (click)="uploadFile(true)">Upload</button>
+            </div>
+        </div>
+        <div *ngIf="type == 'replaceFile'" class="bg-light_Surface outline rounded px-7 py-5">
+            <h2 class="text-2xl mb-3">File Exist</h2>
+            <!-- <div class="p-2 outline rounded"> -->
+            <input type="radio" [(ngModel)]="selectedOption" id="replace" value="replace" name="checkReplace"
+                class="test mb-4">
+            <label for="replace"> Replace File with New File</label><br>
+            <input type="radio" [(ngModel)]="selectedOption" id="keepBoth" value="keepBoth" name="checkReplace"
+                class="test mb-4">
+            <label for="keepBoth"> Keep both files</label>
+
+            <!-- </div>  -->
+            <div class="flex justify-end">
+                <button class=" buttonHover py-2 px-3  rounded-full" (click)="cancelNewFolder()">Cancel</button>
+                <button class="buttonHover py-2 px-3  rounded-full" (click)="uploadExistedFile()">Upload</button>
+            </div>
+        </div>
+    </div>

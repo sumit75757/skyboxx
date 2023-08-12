@@ -141,6 +141,7 @@ export class BinComponent implements OnInit {
   
   deleteForever(){
     if (Object.keys(this.image).length !=0) {
+      console.log(this.image);
       
       if (confirm("Delete Forever")) {
         let data = {

@@ -1,0 +1,13 @@
+.navcolor{
+    background-color: #081d32;
+}
+.navcolor:hover{
+    background-color: #1b95e3;
+}
+.test{
+   padding: 50px;
+}
+.buttonHover:hover{
+ background-color: #a7baff !important;  
+ cursor: text;
+}

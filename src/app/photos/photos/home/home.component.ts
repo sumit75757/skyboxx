@@ -343,6 +343,8 @@ this.imgSize = (res.stats.size/(1024*1000)).toFixed(2)
 
   favorite(){
     if (Object.keys(this.image).length) {
+      console.log(this.image);
+      
       if (confirm("Confirm Favorite")) {
         let data = {
           "image": this.image

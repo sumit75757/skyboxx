@@ -146,7 +146,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     headers = headers.set('Authorization', `Bearer ${this.token}`);
     console.log(headers.get('Authorization'));
     this.photoservice.uploadPhotos(formData).subscribe((res: any) => {
-      location.reload()
+      // location.reload()
 
 
     }, (err) => {

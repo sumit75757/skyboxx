@@ -1,0 +1,42 @@
+
+<div class="dark:bg-darkblue">
+    
+    <div class=" flex  h-12 m-2 duration-300" [class]="selectedFileArray.length||selectedFolderArray.length?'optionsBar':''" >
+        <div class="ps-4" style="padding-top: 2px;" *ngIf="selectedFileArray.length||selectedFolderArray.length" >
+            <i class="fa fa-download icon dark:text-darkwhite text-xl duration-500 py-2 px-3 rounded-full"></i>
+        </div>
+        <div class="" style="padding-top: 2px;" *ngIf="selectedFileArray.length||selectedFolderArray.length">
+            <i (click)="restore()"  class="fa fa-trash icon dark:text-darkwhite text-xl duration-500 py-2 px-3 rounded-full"></i>
+        </div>
+    </div>
+    <div  class="px-8 pt-12 " >
+
+    <!-- <ngx-dropzone class="ngxdropzone " [multiple]="false" [disableClick]="true" > -->
+        <div *ngIf="foldersArray">
+
+            <div *ngFor="let item of foldersArray" (click)="multipleSelect(checkbox,item)"
+            class="text-lg overflow-hidden rounded border-2 inline-block p-1 ps-5 w-56 m-2"
+            [class]="checkbox.checked?'border-lightblue bg-lightblue':''"
+            >
+            <input type="checkbox"  #checkbox class="hidden" >
+            <div class="flex" >
+                <i class="fa fa-folder flex items-center me-4" aria-hidden="true"></i>
+                <span class="whitespace-nowrap select-none ">{{item}}</span>
+            </div>
+        </div>
+        </div>
+        <div *ngIf="filesArray">
+
+            <div *ngFor="let item of filesArray" (click)="multipleSelect(checkbox,item)"
+                class="text-lg overflow-hidden rounded border-2 inline-block p-1 ps-5 w-56 m-2"
+                [class]="checkbox.checked?'border-lightblue bg-lightblue':''">
+                <input type="checkbox"  #checkbox class="hidden" >
+                <div class="flex">
+                    <i class="fa fa-file flex items-center me-4" aria-hidden="true"></i>
+                    <span class="whitespace-nowrap"><abbr title="{{item}}" class="no-underline">{{item}}</abbr></span>
+                </div>
+            </div>
+
+        </div>
+    <!-- </ngx-dropzone> -->
+</div>
