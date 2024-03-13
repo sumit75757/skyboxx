@@ -39,7 +39,7 @@
           *ngFor="let imageData of imageArray[keys]; let i = index">
           <div *ngIf="!imageData.archive" class="m-1 ">
             <div class="  hover:cursor-pointer image-container no-select shadow-inner">
-              <img class="h-20 md:h-44  rounded " (click)="imgFullScreen(imageData.img)" [src]="'http://localhost:4000/'+imageData.img">
+              <img class="h-20 md:h-44  rounded " (click)="imgFullScreen(imageData.img)" [src]="'https://skyboxx-api-c858.vercel.app/'+imageData.img">
               <input type="checkbox" [checked]="selectAll" (change)="fetcthSelected(imageData,keys,$event)" [class]="oneSelected?'':'invisible'" class="image-checkbox absolute mr-3 mb-3 bottom-0 right-0" >
               <i *ngIf="imageData.favorite == true" style="color: honeydew;" class="fa fa-star text-xl hover:cursor-default absolute bottom-0 left-0 text-darkwhite ms-2 mb-2" aria-hidden="true"></i>
             </div>
@@ -68,7 +68,7 @@
       
     </div>
     <div class="  flex items-center no-select" >
-      <img [src]="'http://localhost:4000/'+fullScreenImgArray[index]" class="max-h-3/4 lg:h-3/4 " alt="Full-screen Image">
+      <img [src]="'https://skyboxx-api-c858.vercel.app/'+fullScreenImgArray[index]" class="max-h-3/4 lg:h-3/4 " alt="Full-screen Image">
       
     </div>
     <div class="  flex items-center " >

@@ -8,7 +8,7 @@ export class HomeserviceService {
 
   constructor(private http:HttpClient) { }
   
-  baseURL='http://localhost:4000/api/auth'
+  baseURL='https://skyboxx-api-c858.vercel.app/api/auth'
 
 signup(data:any){
  return this.http.post(this.baseURL+'/singup',data)

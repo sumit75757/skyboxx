@@ -15,7 +15,7 @@
     <div *ngIf="isContent" class=" flex flex-wrap ">
       <div class=" grow-0  relative  " *ngFor="let imageData of imageArray">
         <div class="m-1">
-          <img class="h-20 md:h-44   rounded" [src]="'http://localhost:4000/'+imageData.img">
+          <img class="h-20 md:h-44   rounded" [src]="'https://skyboxx-api-c858.vercel.app/'+imageData.img">
           <div [class]="oneSelected?'opacity-100':'hover:opacity-100 opacity-0'"
             class="absolute w-full h-full top-0 bottom-0 right-0 left-0  duration-200">
             <a style="margin-bottom: 22px; margin-right:22px ; "
@@ -57,7 +57,7 @@
           *ngFor="let imageData of imageArray; ">
           <div  class="m-1 ">
             <div class="  hover:cursor-pointer image-container no-select shadow-inner">
-              <img class="h-20 md:h-44  rounded " (click)="imgFullScreen(imageData.img)" [src]="'http://localhost:4000/'+imageData.img">
+              <img class="h-20 md:h-44  rounded " (click)="imgFullScreen(imageData.img)" [src]="'https://skyboxx-api-c858.vercel.app/'+imageData.img">
               <input type="checkbox" [checked]="selectAll" (change)="fetcthSelected(imageData,$event)" [class]="oneSelected?'':'invisible'" class="image-checkbox absolute mr-3 mb-3 bottom-0 right-0" >
               <i *ngIf="imageData.favorite == true" style="color: honeydew;" class="fa fa-star text-xl hover:cursor-default absolute bottom-0 left-0 text-darkwhite ms-2 mb-2" aria-hidden="true"></i>
             </div>
@@ -81,7 +81,7 @@
       
     </div>
     <div class="  flex items-center no-select" >
-      <img [src]="'http://localhost:4000/'+fullScreenImgArray[index]" class="max-h-3/4 lg:h-3/4 " alt="Full-screen Image">
+      <img [src]="'https://skyboxx-api-c858.vercel.app/'+fullScreenImgArray[index]" class="max-h-3/4 lg:h-3/4 " alt="Full-screen Image">
       
     </div>
     <div class="  flex items-center " >

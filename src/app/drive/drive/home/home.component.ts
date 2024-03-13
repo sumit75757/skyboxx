@@ -15,7 +15,7 @@ export class HomeComponent implements OnInit {
   selectedFileArray: any[] = []
   userId = localStorage.getItem("userid")
   path = localStorage.getItem('path') == null ? localStorage.getItem("userid") : localStorage.getItem('path')
-  doc = 'http://localhost:4000/drive/64622e6aa4714b40e3764750/Ews.pdf'
+  doc = 'https://skyboxx-api-c858.vercel.app/drive/64622e6aa4714b40e3764750/Ews.pdf'
 
   constructor(private driveService: DriveService,private ngxDocViewer:NgxDocViewerComponent) { }
 

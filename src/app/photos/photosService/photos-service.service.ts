@@ -19,7 +19,7 @@ export class PhotosServiceService {
     }
   }
 
-  baseURL="http://localhost:4000/api"
+  baseURL="https://skyboxx-api-c858.vercel.app/api"
 
   constructor(private http: HttpClient) { }
 

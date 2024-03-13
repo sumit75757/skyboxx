@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class DriveService {
-  baseURL="http://localhost:4000/api"
+  baseURL="https://skyboxx-api-c858.vercel.app/api"
   constructor(private http:HttpClient) { }
 
   makeDirectory(data:any){
